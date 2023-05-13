@@ -5,8 +5,11 @@
 #include "Components/Button.h"
 #include "MyltiplayerSessionsSubsystem.h"
 
-void UMenu::MenuSetup()
+void UMenu::MenuSetup(int32 NummerOfPublicConnectrions, FString TypeOfMatch)
 {
+	NumPublicConnections = NummerOfPublicConnectrions;
+	MatchType = TypeOfMatch;
+
 	AddToViewport();
 	SetVisibility(ESlateVisibility::Visible);
 	bIsFocusable = true;
@@ -28,6 +31,11 @@ void UMenu::MenuSetup()
 	if (GameInstance)
 	{
 		MyltiplayerSessionsSubsystem = GameInstance->GetSubsystem<UMyltiplayerSessionsSubsystem>();
+	}
+
+	if (MyltiplayerSessionsSubsystem)
+	{
+		MyltiplayerSessionsSubsystem->MultiplayerOnCreateSessionComplete.AddDynamic(this, &ThisClass::OnCreateSession);
 	}
 }
 
@@ -51,21 +59,41 @@ bool UMenu::Initialize()
 	return true;
 }
 
-void UMenu::HostButtonClicked()
+void UMenu::OnLevelRemovedFromWorld(ULevel* InLevel, UWorld* InWorld)
 {
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow, FString(TEXT("On Host Button Clicked")));
-	}
+	MenuTearDown();
+	Super::OnLevelRemovedFromWorld(InLevel, InWorld);
+}
 
-	if (MyltiplayerSessionsSubsystem)
+void UMenu::OnCreateSession(bool bWasSuccessful)
+{
+	if (bWasSuccessful)
 	{
-		MyltiplayerSessionsSubsystem->CreateSession(4, FString("FreeForAll"));
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow, FString(TEXT("Session created successfuly")));
+		}
+
 		UWorld* World = GetWorld();
 		if (World)
 		{
 			World->ServerTravel("/Game/ThirdPerson/Maps/Lobby?listen");
 		}
+	}
+	else
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, FString(TEXT("Failed to create session")));
+		}
+	}
+}
+
+void UMenu::HostButtonClicked()
+{
+	if (MyltiplayerSessionsSubsystem)
+	{
+		MyltiplayerSessionsSubsystem->CreateSession(NumPublicConnections, MatchType);
 	}
 }
 

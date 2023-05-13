@@ -54,6 +54,10 @@ void UMyltiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FS
 	if (!SessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(), NAME_GameSession, *LastSessionSettings))
 	{
 		SessionInterface->ClearOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegateHandle);
+
+		/// Broadcast our own custom delegate
+
+		MultiplayerOnCreateSessionComplete.Broadcast(false);
 	}
 }
 
@@ -75,6 +79,12 @@ void UMyltiplayerSessionsSubsystem::StartSession()
 
 void UMyltiplayerSessionsSubsystem::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
 {
+	if (SessionInterface)
+	{
+		SessionInterface->ClearOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegateHandle);
+	}
+
+	MultiplayerOnCreateSessionComplete.Broadcast(bWasSuccessful);
 }
 
 void UMyltiplayerSessionsSubsystem::OnFindSessionComplete(bool bWasSuccessful)
