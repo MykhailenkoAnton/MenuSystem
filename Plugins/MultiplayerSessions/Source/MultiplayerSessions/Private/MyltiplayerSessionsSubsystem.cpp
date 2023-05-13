@@ -44,6 +44,7 @@ void UMyltiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FS
 	LastSessionSettings->bAllowJoinViaPresence = true;
 	LastSessionSettings->bShouldAdvertise = true;
 	LastSessionSettings->bUsesPresence = true;
+	LastSessionSettings->BuildUniqueId = 1;
 	//
 	LastSessionSettings->bUseLobbiesIfAvailable = true; // for correct work 5.0.3
 	//
