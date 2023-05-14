@@ -109,6 +109,7 @@ void UMyltiplayerSessionsSubsystem::DestroySession()
 
 void UMyltiplayerSessionsSubsystem::StartSession()
 {
+	//SessionInterface->StartSession(NAME_GameSession);
 }
 
 void UMyltiplayerSessionsSubsystem::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
