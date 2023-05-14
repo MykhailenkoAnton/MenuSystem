@@ -86,6 +86,11 @@ void UMenu::OnCreateSession(bool bWasSuccessful)
 		if (World)
 		{
 			World->ServerTravel(PathToLobby);
+
+			/*if (MyltiplayerSessionsSubsystem)
+			{
+				MyltiplayerSessionsSubsystem->StartSession();
+			}*/
 		}
 	}
 	else
@@ -94,6 +99,7 @@ void UMenu::OnCreateSession(bool bWasSuccessful)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, FString(TEXT("Failed to create session")));
 		}
+		HostButton->SetIsEnabled(true);
 	}
 }
 
@@ -113,6 +119,11 @@ void UMenu::OnFindSessions(const TArray<FOnlineSessionSearchResult>& SessionResu
 			MyltiplayerSessionsSubsystem->JoinSession(Result);
 			return;
 		}
+	}
+
+	if (!bWasSuccessful || SessionResults.Num() <= 0)
+	{
+		JoinButton->SetIsEnabled(true);
 	}
 }
 
@@ -135,6 +146,11 @@ void UMenu::OnJoinSession(EOnJoinSessionCompleteResult::Type Result)
 
 		}
 	}
+
+	if (Result != EOnJoinSessionCompleteResult::Success)
+	{
+		JoinButton->SetIsEnabled(true);
+	}
 }
 
 void UMenu::OnDestroySession(bool bWasSuccessful)
@@ -143,10 +159,26 @@ void UMenu::OnDestroySession(bool bWasSuccessful)
 
 void UMenu::OnStartSession(bool bWasSuccessful)
 {
+	/*if (bWasSuccessful)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow, FString(TEXT("Start Session")));
+		}
+	}
+	else
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow, FString(TEXT("Failed Session")));
+		}
+	}*/
 }
 
 void UMenu::HostButtonClicked()
 {
+	HostButton->SetIsEnabled(false);
+
 	if (MyltiplayerSessionsSubsystem)
 	{
 		MyltiplayerSessionsSubsystem->CreateSession(NumPublicConnections, MatchType);
@@ -155,6 +187,8 @@ void UMenu::HostButtonClicked()
 
 void UMenu::JoinButtonClicked()
 {
+	JoinButton->SetIsEnabled(false);
+
 	if (MyltiplayerSessionsSubsystem)
 	{
 		MyltiplayerSessionsSubsystem->FindSessions(10000);
