@@ -66,7 +66,7 @@ AMenuSystemCharacter::AMenuSystemCharacter() :
 
 		if (GEngine)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, FString::Printf(TEXT("Found subsystem %s"), *OnlineSubsystem->GetSubsystemName().ToString()));
+			/*GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, FString::Printf(TEXT("Found subsystem %s"), *OnlineSubsystem->GetSubsystemName().ToString()));*/
 		}
 	}
 }
@@ -146,10 +146,10 @@ void AMenuSystemCharacter::OnCreateSessionComplete(FName SessionName, bool bWasS
 {
 	if (bWasSuccessful)
 	{
-		if (GEngine)
+		/*if (GEngine)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, FString::Printf(TEXT("Created session: %s"), *SessionName.ToString()));
-		}
+		}*/
 		
 		// 13.Joing - begin C:/Users/Mykha/Documents/Unreal Projects/Udemy/MultiplayerCourse/MenuSystem/Content/ThirdPerson/Maps/Lobby.umap
 		UWorld* World = GetWorld();
@@ -161,10 +161,10 @@ void AMenuSystemCharacter::OnCreateSessionComplete(FName SessionName, bool bWasS
 	}
 	else
 	{
-		if (GEngine)
+		/*if (GEngine)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, FString(TEXT("Failed to create session!")));
-		}
+		}*/
 	}
 }
 
@@ -186,18 +186,18 @@ void AMenuSystemCharacter::OnFindSessionComplete(bool bWasSuccessful)
 		FString MatchType = "";
 		Result.Session.SessionSettings.Get(FName("MatchType"), MatchType);
 		// 13.Joing - end;
-		if (GEngine)
+		/*if (GEngine)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("ID: %s, User: %s"), *ID, *User));
-		}
+		}*/
 
 		// 13.Joing - begin
 		if (MatchType == FString("FreeForAll"))
 		{
-			if (GEngine)
+			/*if (GEngine)
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Joining Match Type: %s"), *MatchType));
-			}
+			}*/
 
 			OnlineSessionInterface->AddOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegate);
 
@@ -221,10 +221,10 @@ void AMenuSystemCharacter::OnJoinSessionComplete(FName SessionName, EOnJoinSessi
 	FString Address = "";
 	if (OnlineSessionInterface->GetResolvedConnectString(NAME_GameSession, Address))
 	{
-		if (GEngine)
+		/*if (GEngine)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow, FString::Printf(TEXT("Connect string: %s"), *Address));
-		}
+		}*/
 
 		APlayerController* PlayerController = GetGameInstance()->GetFirstLocalPlayerController();
 		if (PlayerController)
